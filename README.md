@@ -1,73 +1,200 @@
-# React + TypeScript + Vite
+# Weather App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A clean, responsive weather application built with React, TypeScript, and Vite. Fetches real-time weather data from the OpenWeatherMap API.
 
-Currently, two official plugins are available:
+## 🎯 Project Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+A simple weather app that allows users to search for any city worldwide and displays current weather conditions including temperature, weather description, humidity, and wind speed.
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **React** - Component-based UI library
+- **TypeScript** - Type-safe JavaScript
+- **Vite** - Fast development build tool
+- **OpenWeatherMap API** - Real-time weather data
 
-## Expanding the ESLint configuration
+## ✨ Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Completed
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- ✅ City search functionality
+- ✅ Real-time weather data display
+- ✅ Current temperature (Celsius)
+- ✅ Weather conditions with icon
+- ✅ "Feels like" temperature
+- ✅ Humidity percentage
+- ✅ Wind speed
+- ✅ Loading state while fetching data
+- ✅ Error handling for invalid cities
+- ✅ Clean, centered UI design
+- ✅ Responsive layout
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🚀 Getting Started
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Prerequisites
+
+- Node.js installed
+- OpenWeatherMap API key (free at [openweathermap.org](https://openweathermap.org/api))
+
+### Installation
+
+```bash
+# Clone the repository
+git clone <your-repo-url>
+
+# Navigate to project directory
+cd weather-app
+
+# Install dependencies
+npm install
+
+# Create .env file in root directory
+touch .env
+
+# Add your API key to .env
+VITE_WEATHER_API_KEY=your_api_key_here
+
+# Run development server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open [http://localhost:5173](http://localhost:5173) to view the app.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 📂 Project Structure
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+├── components/
+│   ├── WeatherForm.tsx       # Search input form
+│   └── WeatherDisplay.tsx    # Weather data display
+├── App.tsx                   # Main app with state & API logic
+├── App.css
+└── main.tsx                  # App entry point
+```
+
+## 🔑 API Integration
+
+### How It Works
+
+1. **Geocoding API Call**
+   - Converts city name to latitude/longitude coordinates
+   - Endpoint: `http://api.openweathermap.org/geo/1.0/direct`
+
+2. **Weather API Call**
+   - Fetches current weather data using coordinates
+   - Endpoint: `https://api.openweathermap.org/data/2.5/weather`
+   - Returns temperature in Celsius (`units=metric`)
+
+### API Flow
+
+```
+User Input (City Name)
+    ↓
+Geocoding API (City → Lat/Lon)
+    ↓
+Weather API (Lat/Lon → Weather Data)
+    ↓
+Display Results
+```
+
+## 🧩 Key Concepts Demonstrated
+
+### React Fundamentals
+
+- Component composition
+- State management with `useState`
+- Async data fetching
+- Conditional rendering
+- Event handling
+- Props and data flow
+
+### TypeScript
+
+- Interface definitions for props
+- Type-safe API responses
+- Event handler typing
+
+### API Integration
+
+- Sequential API calls (dependent requests)
+- `async/await` pattern
+- Error handling with try/catch
+- Loading states
+- Environment variable management
+
+### User Experience
+
+- Loading indicators
+- Error messages for invalid input
+- Clean, intuitive UI
+- Real-time data display
+
+## 🎨 Styling
+
+Uses inline styles for:
+
+- Centered layout (max-width container)
+- Clean form design with search button
+- Weather card with shadow and border-radius
+- Responsive spacing and typography
+- Error state styling
+
+## 📝 Learning Goals
+
+This project was built to practice:
+
+- Working with external APIs
+- Handling asynchronous JavaScript
+- Managing multiple API calls in sequence
+- User input validation and error handling
+- TypeScript with React
+- Environment variable security
+
+## 🔄 Data Flow
+
+```
+WeatherForm (user input)
+    ↓
+onHoistUp prop
+    ↓
+App.tsx fetchData()
+    ↓
+API calls (geocoding → weather)
+    ↓
+setState (weatherData)
+    ↓
+WeatherDisplay (render data)
+```
+
+## 🔐 Security
+
+- API key stored in `.env` file
+- `.env` added to `.gitignore`
+- Never committed to version control
+- Uses `VITE_` prefix for Vite environment variables
+
+## 🚧 Future Enhancements
+
+Potential additions:
+
+- 5-day forecast
+- Search history
+- Favorite cities
+- Temperature unit toggle (C°/F°)
+- More detailed weather info (sunrise/sunset, UV index)
+- Geolocation (auto-detect user's location)
+- Weather alerts
+- Animated weather icons
+
+## 📚 API Documentation
+
+- [OpenWeatherMap Current Weather API](https://openweathermap.org/current)
+- [OpenWeatherMap Geocoding API](https://openweathermap.org/api/geocoding-api)
+
+## 📄 License
+
+MIT
+
+---
+
+**Note:** This app requires an active internet connection and a valid OpenWeatherMap API key to function.

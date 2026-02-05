@@ -1,41 +1,85 @@
 import "./App.css";
+import { useState } from "react";
 import { WeatherForm } from "./components/WeatherForm";
+import { WeatherDisplay } from "./components/WeatherDisplay";
 
 const App = () => {
   const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
+  let locationHoisted = "";
 
-  const fetchData = async () => {
-    const url = `http://api.openweathermap.org/geo/1.0/direct?q=Sydney&limit=5&appid=${apiKey}`;
+  const [weatherData, setWeatherData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const fetchData = async (locationHoisted: string) => {
+    setLoading(true);
+    setError("");
+    const url = `http://api.openweathermap.org/geo/1.0/direct?q=${locationHoisted}&limit=5&appid=${apiKey}`;
     try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
+      const latLonResponse = await fetch(url);
+      if (!latLonResponse.ok) {
+        throw new Error(`latLonResponse status: ${latLonResponse.status}`);
       }
-      const latLongConvertResult = await response.json();
+      const latLongConvertResult = await latLonResponse.json();
       const latitude = latLongConvertResult[0].lat;
       const longitude = latLongConvertResult[0].lon;
       const weatherResult = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`,
       );
-      const weatherData = await weatherResult.json();
-      console.log(weatherData);
+      const fullyFormedWeatherData = await weatherResult.json();
+
+      setWeatherData(fullyFormedWeatherData);
     } catch (error) {
-      console.error(error.message);
+      setError("City not found. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const locationHoisted = "";
-
   const hoistLocationUp = (data) => {
-    console.log(data);
-    fetchData();
+    locationHoisted = data.location;
+    console.log(locationHoisted);
+    fetchData(locationHoisted);
   };
 
   return (
-    <>
-      <h1>Weather API</h1>
+    <div
+      style={{
+        maxWidth: "600px",
+        margin: "0 auto",
+        padding: "40px 20px",
+        fontFamily: "system-ui, -apple-system, sans-serif",
+      }}
+    >
+      <h1 style={{ textAlign: "center", marginBottom: "30px" }}>
+        🌤️ Weather App
+      </h1>
+
       <WeatherForm onHoistUp={hoistLocationUp} />
-    </>
+
+      {loading && (
+        <p style={{ textAlign: "center", fontSize: "18px", margin: "20px 0" }}>
+          Loading weather data...
+        </p>
+      )}
+
+      {error && (
+        <p
+          style={{
+            color: "red",
+            textAlign: "center",
+            padding: "15px",
+            backgroundColor: "#ffe6e6",
+            borderRadius: "8px",
+            margin: "20px 0",
+          }}
+        >
+          {error}
+        </p>
+      )}
+
+      {weatherData?.name && <WeatherDisplay weatherData={weatherData} />}
+    </div>
   );
 };
 
