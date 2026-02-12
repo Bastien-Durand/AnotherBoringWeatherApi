@@ -22,7 +22,7 @@ const App = () => {
   const fetchData = async (locationHoisted: string) => {
     setLoading(true);
     setError("");
-    const url = `http://api.openweathermap.org/geo/1.0/direct?q=${locationHoisted}&limit=5&appid=${apiKey}`;
+    const url = `https://api.openweathermap.org/geo/1.0/direct?q=${locationHoisted}&limit=5&appid=${apiKey}`;
     try {
       const latLonResponse = await fetch(url);
       if (!latLonResponse.ok) {
