@@ -3,11 +3,19 @@ import { useState } from "react";
 import { WeatherForm } from "./components/WeatherForm";
 import { WeatherDisplay } from "./components/WeatherDisplay";
 
+interface WeatherData {
+  name: string;
+  sys: { country: string };
+  main: { temp: number; feels_like: number; humidity: number };
+  wind: { speed: number };
+  weather: { description: string; icon: string }[];
+}
+
 const App = () => {
   const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
   let locationHoisted = "";
 
-  const [weatherData, setWeatherData] = useState({});
+  const [weatherData, setWeatherData] = useState<WeatherData | undefined>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -31,13 +39,14 @@ const App = () => {
       setWeatherData(fullyFormedWeatherData);
     } catch (error) {
       setError("City not found. Please try again.");
+      console.log(error);
     } finally {
       setLoading(false);
     }
   };
 
-  const hoistLocationUp = (data) => {
-    locationHoisted = data.location;
+  const hoistLocationUp = (data: string) => {
+    locationHoisted = data;
     console.log(locationHoisted);
     fetchData(locationHoisted);
   };
@@ -55,7 +64,7 @@ const App = () => {
         🌤️ Weather App
       </h1>
 
-      <WeatherForm onHoistUp={hoistLocationUp} />
+      <WeatherForm hoistLocationUp={hoistLocationUp} />
 
       {loading && (
         <p style={{ textAlign: "center", fontSize: "18px", margin: "20px 0" }}>
@@ -78,7 +87,7 @@ const App = () => {
         </p>
       )}
 
-      {weatherData?.name && <WeatherDisplay weatherData={weatherData} />}
+      {weatherData && <WeatherDisplay weatherData={weatherData} />}
     </div>
   );
 };

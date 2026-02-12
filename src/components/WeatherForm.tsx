@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 interface UserInputLocation {
-  name: string;
+  hoistLocationUp: (name: string) => void;
 }
 
 export const WeatherForm = (props: UserInputLocation) => {
@@ -11,8 +11,7 @@ export const WeatherForm = (props: UserInputLocation) => {
 
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    console.log(weatherLocation);
-    props.onHoistUp(weatherLocation);
+    props.hoistLocationUp(weatherLocation.location);
   };
 
   const handleChange = (data: React.ChangeEvent<HTMLInputElement>) => {

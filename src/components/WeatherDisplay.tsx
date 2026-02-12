@@ -1,4 +1,16 @@
-export const WeatherDisplay = ({ weatherData }: weatherDisplayProps) => {
+interface WeatherData {
+  name: string;
+  sys: { country: string };
+  main: { temp: number; feels_like: number; humidity: number };
+  wind: { speed: number };
+  weather: { description: string; icon: string }[];
+}
+
+interface WeatherDisplayProps {
+  weatherData: WeatherData;
+}
+
+export const WeatherDisplay = ({ weatherData }: WeatherDisplayProps) => {
   return (
     <div
       style={{
